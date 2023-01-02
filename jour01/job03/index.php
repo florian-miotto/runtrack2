@@ -14,24 +14,29 @@ $integer = 42;
 $string = 'hello';
 $float = 3.14;
 
-$variables = array(
-    'Booleen' => $boolean,
-    'Entier' => $integer,
-    'Chaîne de caractères' => $string,
-    'Nombre à virgule flottante' => $float
-);
+$variables = array($boolean, $integer, $string, $float);
+$types = array('Booleen', 'Entier', 'Chaîne de caractères', 'Nombre à virgule flottante');
+$names = array();
 
-echo '<table>';
-echo '<tr>';
-echo '<th>Type</th>';
-echo '<th>Nom</th>';
-echo '<th>Valeur</th>';
-echo '</tr>';
-foreach ($variables as $type => $value) {
+foreach ($variables as $key => $value) {
+    $name = array_search($value, get_defined_vars());
+    array_push($names, $name);
+    // $names[] = $name;
+}
+// var_dump(get_defined_vars());
+// var_dump($names);
+// print_r($names);
+echo '<table>',
+ '<tr>',
+ '<th>Type</th>',
+ '<th>Nom</th>',
+ '<th>Valeur</th>',
+ '</tr>';
+for ($i = 0; $i < count($variables); $i++) {
     echo '<tr>';
-    echo '<td>' . htmlspecialchars($type) . '</td>';
-    echo '<td>$' . htmlspecialchars(array_search($value, $variables)) . '</td>';
-    echo '<td>' . htmlspecialchars($value) . '</td>';
+    echo '<td>' . htmlspecialchars($types[$i]) . '</td>';
+    echo '<td>' . htmlspecialchars(gettype($variables[$i])) . '</td>';
+    echo '<td>' . htmlspecialchars($variables[$i]) . '</td>';
     echo '</tr>';
 }
 echo '</table>';
