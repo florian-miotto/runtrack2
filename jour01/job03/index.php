@@ -17,12 +17,12 @@ $float = 3.14;
 $variables = array($boolean, $integer, $string, $float);
 $types = array('Booleen', 'Entier', 'Chaîne de caractères', 'Nombre à virgule flottante');
 $names = array();
-
+/*
 foreach ($variables as $key => $value) {
     $name = array_search($value, get_defined_vars());
     array_push($names, $name);
     // $names[] = $name;
-}
+}*/
 // var_dump(get_defined_vars());
 // var_dump($names);
 // print_r($names);
