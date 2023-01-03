@@ -1,17 +1,19 @@
-Result Size: 753 x 659
 <!DOCTYPE html>
 <html>
 <body>
-​<?php  
+
+<?php  
 $hauteur = 5;
 $i = 1;
-​while ($i <= $hauteur) {
+
+while ($i <= $hauteur) {
   $j = 1;
   while ($j <= $hauteur - $i) {
     ?> 
     &nbsp;
   <?php   $j++;
   }
+  
   $k = 1;
   while ($k <= 2 * $i - 1) {
     if ($k == 1 || $k ==2 * $i ) {
@@ -21,9 +23,9 @@ $i = 1;
     }  elseif($k == 1 || $k ==2 * $i -1){
       echo "\ ";
     }
-    
+     
     else {
-      echo "* ";
+      echo "&nbsp; ";
     }
     $k++;
   } 
@@ -33,5 +35,6 @@ $i = 1;
   $i++;
 }
 ?>  
+
 </body>
 </html>
