@@ -28,7 +28,7 @@ $username = $password = "";
 if($_POST["username"]=="John"&& $_POST["password"]=="Rambo") {
     echo "<h1>C’est pas ma guerre</h1>";
 }
-    elseif($_POST["username"]==""&& $_POST["password"]=="")
+elseif($_POST["username"]==""&& $_POST["password"]=="")
     {echo "";
     }
 else 
