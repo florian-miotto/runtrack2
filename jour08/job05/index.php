@@ -1,4 +1,19 @@
+<!-- Job 05
+Développez le fameux jeu du morpion. Faites un tableau html avec 3 lignes et 3
+colonnes représentant la grille. Au début de la partie, chacune des cases contient un
+bouton de type submit dont la valeur est “-”. Si un joueur clique sur ce bouton, le bouton
+est remplacé par un “O” ou par un “X”. C’est le joueur “X” qui commence.
+Dès qu’un joueur a gagné, affichez “X a gagné” ou “O a gagné” et réinitialisez la partie. Si
+toutes les cases ont été cliquées et que personne n’a gagné, affichez “Match nul” et
+
+réinitialisez la partie. Un bouton “réinitialiser la partie” présent en dessous de la grille
+permet également de réinitialiser la partie à tout moment. -->
+
+
+
+
 <?php
+ session_start(); // start the session
     $board = [
         ["-", "-", "-"],
         ["-", "-", "-"],
@@ -9,16 +24,23 @@
 
     if (isset($_POST['case00'])) {
         $board[0][0] = $currentPlayer;
-        $currentPlayer = ($currentPlayer == "X") ? "O" : "X";
+        $currentPlayer = ($currentPlayer == "X") ;
+        echo $currentPlayer;
+        var_dump($currentPlayer);
+    }
+    if (isset($_POST['case01'])) {
+        $board[0][0] = $currentPlayer;
+        $currentPlayer = ($currentPlayer == "0") ;
         echo $currentPlayer;
         var_dump($currentPlayer);
     }
 
-    if (isset($_POST['case01'])) {
-        $board[0][1] = $currentPlayer;
-        $currentPlayer = ($currentPlayer == "X") ? "O" : "X";
-    }
 
+
+if (isset($_POST[$currentPlayer=="X"])) {
+ $currentPlayer ="0";   
+}
+ 
   
     if (isset($_POST['reset'])) {
         $board = [
@@ -29,7 +51,7 @@
         $currentPlayer = "X";
     }
 ?>
-
+<form action="" method="post">
     <table>
     <tr>
         <td><button type="submit" name="case00" value="<?= $board[0][0] ?>"><?= $board[0][0] ?></button></td>
@@ -47,6 +69,6 @@
         <td><button type="submit" name="case21" value="<?= $board[2][1] ?>"><?= $board[2][1] ?></button></td>
     </tr>  
 </table> 
-<form action="" method="post">
+
     <input type="submit" value="Réinitialiser la partie" name="reset">
 </form>
