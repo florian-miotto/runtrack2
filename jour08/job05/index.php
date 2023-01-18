@@ -1,74 +1,108 @@
-<!-- Job 05
-Développez le fameux jeu du morpion. Faites un tableau html avec 3 lignes et 3
-colonnes représentant la grille. Au début de la partie, chacune des cases contient un
-bouton de type submit dont la valeur est “-”. Si un joueur clique sur ce bouton, le bouton
-est remplacé par un “O” ou par un “X”. C’est le joueur “X” qui commence.
-Dès qu’un joueur a gagné, affichez “X a gagné” ou “O a gagné” et réinitialisez la partie. Si
-toutes les cases ont été cliquées et que personne n’a gagné, affichez “Match nul” et
-
-réinitialisez la partie. Un bouton “réinitialiser la partie” présent en dessous de la grille
-permet également de réinitialiser la partie à tout moment. -->
-
-
-
-
 <?php
- session_start(); // start the session
-    $board = [
-        ["-", "-", "-"],
-        ["-", "-", "-"],
-        ["-", "-", "-"]
-    ];
-
-    $currentPlayer = "X";
-
-    if (isset($_POST['case00'])) {
-        $board[0][0] = $currentPlayer;
-        $currentPlayer = ($currentPlayer == "X") ;
-        echo $currentPlayer;
-        var_dump($currentPlayer);
-    }
-    if (isset($_POST['case01'])) {
-        $board[0][0] = $currentPlayer;
-        $currentPlayer = ($currentPlayer == "0") ;
-        echo $currentPlayer;
-        var_dump($currentPlayer);
-    }
-
-
-
-if (isset($_POST[$currentPlayer=="X"])) {
- $currentPlayer ="0";   
+ 
+session_start();
+ 
+// Initialize the game X by default
+if(!isset($_SESSION['game_state'])) {
+  $_SESSION['game_state'] = array_fill(0, 9, "");
+  $_SESSION['current_player'] = "X";
 }
  
-  
-    if (isset($_POST['reset'])) {
-        $board = [
-            ["-", "-", "-"],
-            ["-", "-", "-"],
-            ["-", "-", "-"]
-        ];
-        $currentPlayer = "X";
-    }
+ 
+for ($i = 1; $i <= 9; $i++) {
+  if (isset($_POST['button'.$i])) {
+	  handleButtonClick($i-1);
+  }
+}
+ 
+ 
+// Function  for each buttons & reset the value of the current player
+function handleButtonClick($button_index)
+{
+ 
+	if ($_SESSION['game_state'][$button_index] === "") {
+ 
+		$_SESSION['game_state'][$button_index] = $_SESSION['current_player'];
+ 
+		checkForWin();
+ 
+		toggleCurrentPlayer();
+ 
+	}
+ 
+ 
+}
+ 
+ 
+// Function to check for wins & rules ----------------works-----
+function checkForWin() {
+  $game_state = $_SESSION['game_state'];
+  if(($game_state[0] === $game_state[1] && $game_state[1] === $game_state[2] && $game_state[0] !== "") ||
+  	($game_state[3] === $game_state[4] && $game_state[4] === $game_state[5] && $game_state[3] !== "") ||
+	 ($game_state[6] === $game_state[7] && $game_state[7] === $game_state[8] && $game_state[6] !== "") ||
+	 ($game_state[0] === $game_state[3] && $game_state[3] === $game_state[6] && $game_state[0] !== "") ||
+	 ($game_state[1] === $game_state[4] && $game_state[4] === $game_state[5] && $game_state[1] !== "") ||
+	 ($game_state[2] === $game_state[5] && $game_state[5] === $game_state[8] && $game_state[2] !== "") ||
+	 ($game_state[0] === $game_state[4] && $game_state[4] === $game_state[8] && $game_state[0] !== "") ||
+	 ($game_state[2] === $game_state[4] && $game_state[4] === $game_state[6] && $game_state[2] !== "")
+	 ) {
+	echo "Player " . $_SESSION['current_player'] . " wins!";
+	session_destroy();
+  }
+}
+// Function to toggle the current player------------not used but works-------------
+function toggleCurrentPlayer() {
+  if($_SESSION['current_player'] === "X") {
+	$_SESSION['current_player'] = "O";
+  } else {
+	$_SESSION['current_player'] = "X";
+  }
+}
+ 
+//reset the game  -----------------------works-------------
+  if (isset($_POST['reset'])) {
+	resetGame();
+  }
+ 
+  function resetGame() {
+	session_destroy();
+  }
+ 
+ 
 ?>
-<form action="" method="post">
-    <table>
-    <tr>
-        <td><button type="submit" name="case00" value="<?= $board[0][0] ?>"><?= $board[0][0] ?></button></td>
-        <td><button type="submit" name="case01" value="<?= $board[0][1] ?>"><?= $board[0][1] ?></button></td>
-        <td><button type="submit" name="case02" value="<?= $board[0][2] ?>"><?= $board[0][2] ?></button></td>
-    </tr>
-    <tr>
-        <td><button type="submit" name="case10" value="<?= $board[1][0] ?>"><?= $board[1][0] ?></button></td>
-        <td><button type="submit" name="case11" value="<?= $board[1][1] ?>"><?= $board[1][1] ?></button></td>
-        <td><button type="submit" name="case12" value="<?= $board[1][2] ?>"><?= $board[1][2] ?></button></td>
-    </tr>
-    <tr>
-        <td><button type="submit" name="case20" value="<?= $board[2][0] ?>"><?= $board[2][0] ?></button></td>
-        <td><button type="submit" name="case21" value="<?= $board[2][1] ?>"><?= $board[2][1] ?></button></td>
-        <td><button type="submit" name="case21" value="<?= $board[2][1] ?>"><?= $board[2][1] ?></button></td>
-    </tr>  
-</table> 
-
-    <input type="submit" value="Réinitialiser la partie" name="reset">
+<form method="post">
+<input type="submit" name="reset" value="Reset">
+ 
+<table>
+ 
+	<?php foreach (range(1, 3) as $ligne) {?>
+ 
+		<tr>
+ 
+			<?php foreach (range(1, 3) as $colonne) {?>
+ 
+				<?php
+					$i = ($ligne - 1) * 3 + $colonne;
+ 
+					$affichage =
+						("" === $_SESSION['game_state'][$i - 1])
+						? "-"
+						: $_SESSION['game_state'][$i - 1]
+					;
+ 
+				?>
+ 
+				<td>
+					<button type="submit" name="button<?php echo htmlspecialchars($i);?>">
+						<?php echo htmlspecialchars($affichage);?>
+					</button>
+				</td>
+ 
+			<?php }?>
+ 
+		</tr>
+ 
+	<?php }?>
+ 
+</table>
 </form>
